@@ -18,7 +18,6 @@ func (c corsWrapper) build() gin.HandlerFunc {
 		if !c.optionPassthrough &&
 			ctx.Request.Method == http.MethodOptions &&
 			ctx.GetHeader("Access-Control-Request-Method") != "" {
-			// Abort processing next Gin middlewares.
 			ctx.AbortWithStatus(http.StatusOK)
 		}
 	}
