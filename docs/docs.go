@@ -10,11 +10,7 @@ const docTemplate = `{
     "info": {
         "description": "{{escape .Description}}",
         "title": "{{.Title}}",
-        "termsOfService": "https://developers.ctd.com.ar/es_ar/terminos-y-condiciones",
-        "contact": {
-            "name": "API Support",
-            "url": "https://developers.ctd.com.ar/support"
-        },
+        "contact": {},
         "license": {
             "name": "Apache 2.0",
             "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
@@ -24,39 +20,9 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/products": {
-            "get": {
-                "description": "get all products",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Products"
-                ],
-                "summary": "List Products",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "token",
-                        "name": "token",
-                        "in": "header",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "422": {
-                        "description": "Unprocessable Entity",
-                        "schema": {
-                            "$ref": "#/definitions/web.errorResponse"
-                        }
-                    }
-                }
-            },
+        "/appointments": {
             "post": {
-                "description": "save products",
+                "description": "store appointment with dni \u0026 license",
                 "consumes": [
                     "application/json"
                 ],
@@ -64,9 +30,9 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Products"
+                    "Appointments"
                 ],
-                "summary": "Save products",
+                "summary": "Store appointment with dni \u0026 license",
                 "parameters": [
                     {
                         "type": "string",
@@ -76,12 +42,12 @@ const docTemplate = `{
                         "required": true
                     },
                     {
-                        "description": "Product to store",
-                        "name": "product",
+                        "description": "Appointment to store",
+                        "name": "appointment",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/domain.Product"
+                            "$ref": "#/definitions/domain.Appointment"
                         }
                     }
                 ],
@@ -101,30 +67,55 @@ const docTemplate = `{
                 }
             }
         },
-        "/products/{id}": {
+        "/appointments/dni/{dni}": {
             "get": {
-                "description": "get Product by id",
-                "consumes": [
-                    "application/json"
-                ],
+                "description": "get appointment",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
-                    "Products"
+                    "Appointments"
                 ],
-                "summary": "Get Product",
+                "summary": "appointment",
                 "parameters": [
                     {
-                        "type": "string",
-                        "description": "token",
-                        "name": "token",
-                        "in": "header",
+                        "type": "integer",
+                        "description": "Appointment DNI",
+                        "name": "id",
+                        "in": "path",
                         "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/web.response"
+                        }
                     },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/web.response"
+                        }
+                    }
+                }
+            }
+        },
+        "/appointments/{id}": {
+            "get": {
+                "description": "get appointment",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Appointments"
+                ],
+                "summary": "appointment",
+                "parameters": [
                     {
                         "type": "integer",
-                        "description": "Product ID",
+                        "description": "Appointment ID",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -146,7 +137,7 @@ const docTemplate = `{
                 }
             },
             "put": {
-                "description": "update existing product",
+                "description": "modify appointment",
                 "consumes": [
                     "application/json"
                 ],
@@ -154,25 +145,25 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Products"
+                    "Appointments"
                 ],
-                "summary": "Update product",
+                "summary": "Modify appointment",
                 "parameters": [
                     {
-                        "description": "Product to update",
-                        "name": "product",
+                        "type": "string",
+                        "description": "token",
+                        "name": "token",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "Appointment to store",
+                        "name": "appointment",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/domain.Product"
+                            "$ref": "#/definitions/domain.Appointment"
                         }
-                    },
-                    {
-                        "type": "integer",
-                        "description": "Product ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
                     }
                 ],
                 "responses": {
@@ -203,17 +194,11 @@ const docTemplate = `{
                 }
             },
             "delete": {
-                "description": "Delete product",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
+                "description": "delete appointment",
                 "tags": [
-                    "Products"
+                    "Appointments"
                 ],
-                "summary": "Delete product",
+                "summary": "Delete appointment",
                 "parameters": [
                     {
                         "type": "string",
@@ -224,7 +209,7 @@ const docTemplate = `{
                     },
                     {
                         "type": "integer",
-                        "description": "Product ID",
+                        "description": "Appointment ID",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -258,7 +243,7 @@ const docTemplate = `{
                 }
             },
             "patch": {
-                "description": "update selected fields of a product",
+                "description": "modify appointment",
                 "consumes": [
                     "application/json"
                 ],
@@ -266,22 +251,122 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Products"
+                    "Appointments"
                 ],
-                "summary": "Update product",
+                "summary": "Modify appointment",
                 "parameters": [
                     {
-                        "description": "Product to update",
-                        "name": "product",
+                        "type": "string",
+                        "description": "token",
+                        "name": "token",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "Appointment to store",
+                        "name": "appointment",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/domain.Product"
+                            "$ref": "#/definitions/domain.Appointment"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/web.response"
+                        }
+                    }
+                }
+            }
+        },
+        "/dentists": {
+            "get": {
+                "description": "get dentists",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Dentists"
+                ],
+                "summary": "List dentists",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/web.response"
                         }
                     },
+                    "422": {
+                        "description": "Unprocessable Entity",
+                        "schema": {
+                            "$ref": "#/definitions/web.errorResponse"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "store dentist",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Dentists"
+                ],
+                "summary": "Store dentist",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "token",
+                        "name": "token",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "Dentist to store",
+                        "name": "dentist",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/domain.Dentist"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/web.response"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/web.response"
+                        }
+                    }
+                }
+            }
+        },
+        "/dentists/{id}": {
+            "get": {
+                "description": "get dentists",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Dentists"
+                ],
+                "summary": "dentist",
+                "parameters": [
                     {
                         "type": "integer",
-                        "description": "Product ID",
+                        "description": "Dentist ID",
                         "name": "id",
                         "in": "path",
                         "required": true
@@ -297,7 +382,403 @@ const docTemplate = `{
                     "404": {
                         "description": "Not Found",
                         "schema": {
+                            "$ref": "#/definitions/web.response"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "description": "modify dentist",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Dentists"
+                ],
+                "summary": "Modify dentist",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "token",
+                        "name": "token",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "Dentist to store",
+                        "name": "dentist",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/domain.Dentist"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/web.response"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/web.response"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/web.response"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
                             "$ref": "#/definitions/web.errorResponse"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "delete dentist",
+                "tags": [
+                    "Dentists"
+                ],
+                "summary": "Delete dentist",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "token",
+                        "name": "token",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Dentist ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No Content",
+                        "schema": {
+                            "$ref": "#/definitions/web.response"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/web.response"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/web.response"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/web.response"
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "description": "modify dentist",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Dentists"
+                ],
+                "summary": "Modify dentist",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "token",
+                        "name": "token",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "Dentist to store",
+                        "name": "dentist",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/domain.Dentist"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/web.response"
+                        }
+                    }
+                }
+            }
+        },
+        "/patients": {
+            "get": {
+                "description": "get patient",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Patients"
+                ],
+                "summary": "List patient",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/web.response"
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity",
+                        "schema": {
+                            "$ref": "#/definitions/web.errorResponse"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "store patient",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Patients"
+                ],
+                "summary": "Store patient",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "token",
+                        "name": "token",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "Patient to store",
+                        "name": "patient",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/domain.Patient"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/web.response"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/web.response"
+                        }
+                    }
+                }
+            }
+        },
+        "/patients/{id}": {
+            "get": {
+                "description": "get patient",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Patients"
+                ],
+                "summary": "patient",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Patient ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/web.response"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/web.response"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "description": "modify patient",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Patients"
+                ],
+                "summary": "Modify patient",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "token",
+                        "name": "token",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "Patient to store",
+                        "name": "patient",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/domain.Patient"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/web.response"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/web.response"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/web.response"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/web.errorResponse"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "delete patient",
+                "tags": [
+                    "Patients"
+                ],
+                "summary": "Delete patient",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "token",
+                        "name": "token",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Patient ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No Content",
+                        "schema": {
+                            "$ref": "#/definitions/web.response"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/web.response"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/web.response"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/web.response"
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "description": "modify patient",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Patients"
+                ],
+                "summary": "Modify patient",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "token",
+                        "name": "token",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "Patient to store",
+                        "name": "patient",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/domain.Patient"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/web.response"
                         }
                     }
                 }
@@ -305,36 +786,85 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "domain.Product": {
+        "domain.Appointment": {
             "type": "object",
             "required": [
-                "code_value",
-                "expiration",
-                "name",
-                "price",
-                "quantity"
+                "date",
+                "dentist",
+                "description",
+                "patient",
+                "time"
             ],
             "properties": {
-                "code_value": {
+                "date": {
                     "type": "string"
                 },
-                "expiration": {
+                "dentist": {
+                    "$ref": "#/definitions/domain.Dentist"
+                },
+                "description": {
                     "type": "string"
                 },
                 "id": {
                     "type": "integer"
                 },
-                "is_published": {
-                    "type": "boolean"
+                "patient": {
+                    "$ref": "#/definitions/domain.Patient"
+                },
+                "time": {
+                    "type": "string"
+                }
+            }
+        },
+        "domain.Dentist": {
+            "type": "object",
+            "required": [
+                "lastname",
+                "license",
+                "name"
+            ],
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "lastname": {
+                    "type": "string"
+                },
+                "license": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "domain.Patient": {
+            "type": "object",
+            "required": [
+                "discharge_date",
+                "dni",
+                "lastname",
+                "name",
+                "residence"
+            ],
+            "properties": {
+                "discharge_date": {
+                    "type": "string"
+                },
+                "dni": {
+                    "type": "integer"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "lastname": {
+                    "type": "string"
                 },
                 "name": {
                     "type": "string"
                 },
-                "price": {
-                    "type": "number"
-                },
-                "quantity": {
-                    "type": "integer"
+                "residence": {
+                    "type": "string"
                 }
             }
         },
@@ -367,8 +897,8 @@ var SwaggerInfo = &swag.Spec{
 	Host:             "",
 	BasePath:         "",
 	Schemes:          []string{},
-	Title:            "Certified Tech Developer",
-	Description:      "This API Handle Products.",
+	Title:            "Certified Tech Developer - Julieta Alfie",
+	Description:      "Clinica Odontologica.",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,
 }

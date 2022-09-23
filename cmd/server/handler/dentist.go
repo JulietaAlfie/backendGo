@@ -21,7 +21,17 @@ func NewDentistHandler(s dentist.Service) *dentistHandler {
 		s: s,
 	}
 }
-
+// StoreDentist godoc
+// @Summary Store dentist
+// @Tags Dentists
+// @Description store dentist
+// @Accept  json
+// @Produce  json
+// @Param token header string true "token"
+// @Param dentist body domain.Dentist true "Dentist to store"
+// @Success 200 {object} web.response
+// @Failure 400 {object} web.response
+// @Router /dentists [post]
 func (h *dentistHandler) Post() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var dentist domain.Dentist
@@ -43,7 +53,14 @@ func (h *dentistHandler) Post() gin.HandlerFunc {
 		web.Success(c, 201, dent)
 	}
 }
-
+// ListDentists godoc
+// @Summary List dentists
+// @Tags Dentists
+// @Description get dentists
+// @Produce  json
+// @Success 200 {object} web.response
+// @Failure 422 {object} web.errorResponse
+// @Router /dentists [get]
 func (h *dentistHandler) GetAll() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		dentists, err := h.s.GetAll()
@@ -54,7 +71,15 @@ func (h *dentistHandler) GetAll() gin.HandlerFunc {
 		web.Success(c, 200, dentists)
 	}
 }
-
+// Dentist godoc
+// @Summary dentist
+// @Tags Dentists
+// @Description get dentists
+// @Produce  json
+// @Param id path int true "Dentist ID"
+// @Success 200 {object} web.response
+// @Failure 404 {object} web.response
+// @Router /dentists/{id} [get]
 func (h *dentistHandler) GetByID() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		idParam := c.Param("id")
@@ -71,7 +96,19 @@ func (h *dentistHandler) GetByID() gin.HandlerFunc {
 		web.Success(c, 200, dentist)
 	}
 }
-
+// ModifyDentist godoc
+// @Summary Modify dentist
+// @Tags Dentists
+// @Description modify dentist
+// @Accept  json
+// @Produce  json
+// @Param token header string true "token"
+// @Param dentist body domain.Dentist true "Dentist to store"
+// @Success 200 {object} web.response
+// @Failure 400 {object} web.response
+// @Failure 401 {object} web.response
+// @Failure 404 {object} web.errorResponse
+// @Router /dentists/{id} [put]
 func (h *dentistHandler) Put() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		token := c.GetHeader("TOKEN")
@@ -117,7 +154,16 @@ func (h *dentistHandler) Put() gin.HandlerFunc {
 		web.Success(c, 200, dent)
 	}
 }
-
+// ModifyDentist godoc
+// @Summary Modify dentist
+// @Tags Dentists
+// @Description modify dentist
+// @Accept  json
+// @Produce  json
+// @Param token header string true "token"
+// @Param dentist body domain.Dentist true "Dentist to store"
+// @Success 200 {object} web.response
+// @Router /dentists/{id} [patch]
 func (h *dentistHandler) Patch() gin.HandlerFunc {
 	type Request struct {
 		Lastname string `json:"lastname,omitempty"`
@@ -163,7 +209,17 @@ func (h *dentistHandler) Patch() gin.HandlerFunc {
 		web.Success(c, 200, dent)
 	}
 }
-
+// DeleteDentist godoc
+// @Summary Delete dentist
+// @Tags Dentists
+// @Description delete dentist
+// @Param token header string true "token"
+// @Param id path int true "Dentist ID"
+// @Success 204 {object} web.response
+// @Failure 400 {object} web.response
+// @Failure 401 {object} web.response
+// @Failure 404 {object} web.response
+// @Router /dentists/{id} [delete]
 func (h *dentistHandler) Delete() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		token := c.GetHeader("TOKEN")

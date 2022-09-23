@@ -21,13 +21,9 @@ import (
 	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
-// @title Certified Tech Developer
+// @title Certified Tech Developer - Julieta Alfie
 // @version 1.0
-// @description This API Handle Products.
-// @termsOfService https://developers.ctd.com.ar/es_ar/terminos-y-condiciones
-
-// @contact.name API Support
-// @contact.url https://developers.ctd.com.ar/support
+// @description Clinica Odontologica.
 
 // @license.name Apache 2.0
 // @license.url http://www.apache.org/licenses/LICENSE-2.0.html

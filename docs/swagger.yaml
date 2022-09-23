@@ -1,26 +1,60 @@
 definitions:
-  domain.Product:
+  domain.Appointment:
     properties:
-      code_value:
+      date:
         type: string
-      expiration:
+      dentist:
+        $ref: '#/definitions/domain.Dentist'
+      description:
         type: string
       id:
         type: integer
-      is_published:
-        type: boolean
+      patient:
+        $ref: '#/definitions/domain.Patient'
+      time:
+        type: string
+    required:
+    - date
+    - dentist
+    - description
+    - patient
+    - time
+    type: object
+  domain.Dentist:
+    properties:
+      id:
+        type: integer
+      lastname:
+        type: string
+      license:
+        type: string
       name:
         type: string
-      price:
-        type: number
-      quantity:
-        type: integer
     required:
-    - code_value
-    - expiration
+    - lastname
+    - license
     - name
-    - price
-    - quantity
+    type: object
+  domain.Patient:
+    properties:
+      discharge_date:
+        type: string
+      dni:
+        type: integer
+      id:
+        type: integer
+      lastname:
+        type: string
+      name:
+        type: string
+      residence:
+        type: string
+    required:
+    - discharge_date
+    - dni
+    - lastname
+    - name
+    - residence
     type: object
   web.errorResponse:
     properties:
@@ -36,54 +70,31 @@ definitions:
       data: {}
     type: object
 info:
-  contact:
-    name: API Support
-    url: https://developers.ctd.com.ar/support
-  description: This API Handle Products.
+  contact: {}
+  description: Clinica Odontologica.
   license:
     name: Apache 2.0
     url: http://www.apache.org/licenses/LICENSE-2.0.html
-  termsOfService: https://developers.ctd.com.ar/es_ar/terminos-y-condiciones
-  title: Certified Tech Developer
+  title: Certified Tech Developer - Julieta Alfie
   version: "1.0"
 paths:
-  /products:
-    get:
-      consumes:
-      - application/json
-      description: get all products
-      parameters:
-      - description: token
-        in: header
-        name: token
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "422":
-          description: Unprocessable Entity
-          schema:
-            $ref: '#/definitions/web.errorResponse'
-      summary: List Products
-      tags:
-      - Products
+  /appointments:
     post:
       consumes:
       - application/json
-      description: save products
+      description: store appointment with dni & license
       parameters:
       - description: token
         in: header
         name: token
         required: true
         type: string
-      - description: Product to store
+      - description: Appointment to store
         in: body
-        name: product
+        name: appointment
         required: true
         schema:
-          $ref: '#/definitions/domain.Product'
+          $ref: '#/definitions/domain.Appointment'
       produces:
       - application/json
       responses:
@@ -95,27 +106,23 @@ paths:
           description: Bad Request
           schema:
             $ref: '#/definitions/web.response'
-      summary: Save products
+      summary: Store appointment with dni & license
       tags:
-      - Products
-  /products/{id}:
+      - Appointments
+  /appointments/{id}:
     delete:
-      consumes:
-      - application/json
-      description: Delete product
+      description: delete appointment
       parameters:
       - description: token
         in: header
         name: token
         required: true
         type: string
-      - description: Product ID
+      - description: Appointment ID
         in: path
         name: id
         required: true
         type: integer
-      produces:
-      - application/json
       responses:
         "204":
           description: No Content
@@ -133,54 +140,47 @@ paths:
           description: Not Found
           schema:
             $ref: '#/definitions/web.response'
-      summary: Delete product
+      summary: Delete appointment
       tags:
-      - Products
+      - Appointments
     get:
+      description: get appointment
+      parameters:
+      - description: Appointment ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/web.response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/web.response'
+      summary: appointment
+      tags:
+      - Appointments
+    patch:
       consumes:
       - application/json
-      description: get Product by id
+      description: modify appointment
       parameters:
       - description: token
         in: header
         name: token
         required: true
         type: string
-      - description: Product ID
-        in: path
-        name: id
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/web.response'
-        "404":
-          description: Not Found
-          schema:
-            $ref: '#/definitions/web.response'
-      summary: Get Product
-      tags:
-      - Products
-    patch:
-      consumes:
-      - application/json
-      description: update selected fields of a product
-      parameters:
-      - description: Product to update
+      - description: Appointment to store
         in: body
-        name: product
+        name: appointment
         required: true
         schema:
-          $ref: '#/definitions/domain.Product'
-      - description: Product ID
-        in: path
-        name: id
-        required: true
-        type: integer
+          $ref: '#/definitions/domain.Appointment'
       produces:
       - application/json
       responses:
@@ -188,29 +188,25 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/web.response'
-        "404":
-          description: Not Found
-          schema:
-            $ref: '#/definitions/web.errorResponse'
-      summary: Update product
+      summary: Modify appointment
       tags:
-      - Products
+      - Appointments
     put:
       consumes:
       - application/json
-      description: update existing product
+      description: modify appointment
       parameters:
-      - description: Product to update
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      - description: Appointment to store
         in: body
-        name: product
+        name: appointment
         required: true
         schema:
-          $ref: '#/definitions/domain.Product'
-      - description: Product ID
-        in: path
-        name: id
-        required: true
-        type: integer
+          $ref: '#/definitions/domain.Appointment'
       produces:
       - application/json
       responses:
@@ -230,7 +226,364 @@ paths:
           description: Not Found
           schema:
             $ref: '#/definitions/web.errorResponse'
-      summary: Update product
+      summary: Modify appointment
       tags:
-      - Products
+      - Appointments
+  /appointments/dni/{dni}:
+    get:
+      description: get appointment
+      parameters:
+      - description: Appointment DNI
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/web.response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/web.response'
+      summary: appointment
+      tags:
+      - Appointments
+  /dentists:
+    get:
+      description: get dentists
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/web.response'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/web.errorResponse'
+      summary: List dentists
+      tags:
+      - Dentists
+    post:
+      consumes:
+      - application/json
+      description: store dentist
+      parameters:
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      - description: Dentist to store
+        in: body
+        name: dentist
+        required: true
+        schema:
+          $ref: '#/definitions/domain.Dentist'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/web.response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/web.response'
+      summary: Store dentist
+      tags:
+      - Dentists
+  /dentists/{id}:
+    delete:
+      description: delete dentist
+      parameters:
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      - description: Dentist ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "204":
+          description: No Content
+          schema:
+            $ref: '#/definitions/web.response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/web.response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/web.response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/web.response'
+      summary: Delete dentist
+      tags:
+      - Dentists
+    get:
+      description: get dentists
+      parameters:
+      - description: Dentist ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/web.response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/web.response'
+      summary: dentist
+      tags:
+      - Dentists
+    patch:
+      consumes:
+      - application/json
+      description: modify dentist
+      parameters:
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      - description: Dentist to store
+        in: body
+        name: dentist
+        required: true
+        schema:
+          $ref: '#/definitions/domain.Dentist'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/web.response'
+      summary: Modify dentist
+      tags:
+      - Dentists
+    put:
+      consumes:
+      - application/json
+      description: modify dentist
+      parameters:
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      - description: Dentist to store
+        in: body
+        name: dentist
+        required: true
+        schema:
+          $ref: '#/definitions/domain.Dentist'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/web.response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/web.response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/web.response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/web.errorResponse'
+      summary: Modify dentist
+      tags:
+      - Dentists
+  /patients:
+    get:
+      description: get patient
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/web.response'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/web.errorResponse'
+      summary: List patient
+      tags:
+      - Patients
+    post:
+      consumes:
+      - application/json
+      description: store patient
+      parameters:
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      - description: Patient to store
+        in: body
+        name: patient
+        required: true
+        schema:
+          $ref: '#/definitions/domain.Patient'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/web.response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/web.response'
+      summary: Store patient
+      tags:
+      - Patients
+  /patients/{id}:
+    delete:
+      description: delete patient
+      parameters:
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      - description: Patient ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "204":
+          description: No Content
+          schema:
+            $ref: '#/definitions/web.response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/web.response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/web.response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/web.response'
+      summary: Delete patient
+      tags:
+      - Patients
+    get:
+      description: get patient
+      parameters:
+      - description: Patient ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/web.response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/web.response'
+      summary: patient
+      tags:
+      - Patients
+    patch:
+      consumes:
+      - application/json
+      description: modify patient
+      parameters:
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      - description: Patient to store
+        in: body
+        name: patient
+        required: true
+        schema:
+          $ref: '#/definitions/domain.Patient'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/web.response'
+      summary: Modify patient
+      tags:
+      - Patients
+    put:
+      consumes:
+      - application/json
+      description: modify patient
+      parameters:
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      - description: Patient to store
+        in: body
+        name: patient
+        required: true
+        schema:
+          $ref: '#/definitions/domain.Patient'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/web.response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/web.response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/web.response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/web.errorResponse'
+      summary: Modify patient
+      tags:
+      - Patients
 swagger: "2.0"
