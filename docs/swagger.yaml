@@ -1,0 +1,236 @@
+definitions:
+  domain.Product:
+    properties:
+      code_value:
+        type: string
+      expiration:
+        type: string
+      id:
+        type: integer
+      is_published:
+        type: boolean
+      name:
+        type: string
+      price:
+        type: number
+      quantity:
+        type: integer
+    required:
+    - code_value
+    - expiration
+    - name
+    - price
+    - quantity
+    type: object
+  web.errorResponse:
+    properties:
+      code:
+        type: string
+      message:
+        type: string
+      status:
+        type: integer
+    type: object
+  web.response:
+    properties:
+      data: {}
+    type: object
+info:
+  contact:
+    name: API Support
+    url: https://developers.ctd.com.ar/support
+  description: This API Handle Products.
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: https://developers.ctd.com.ar/es_ar/terminos-y-condiciones
+  title: Certified Tech Developer
+  version: "1.0"
+paths:
+  /products:
+    get:
+      consumes:
+      - application/json
+      description: get all products
+      parameters:
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/web.errorResponse'
+      summary: List Products
+      tags:
+      - Products
+    post:
+      consumes:
+      - application/json
+      description: save products
+      parameters:
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      - description: Product to store
+        in: body
+        name: product
+        required: true
+        schema:
+          $ref: '#/definitions/domain.Product'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/web.response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/web.response'
+      summary: Save products
+      tags:
+      - Products
+  /products/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete product
+      parameters:
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      - description: Product ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+          schema:
+            $ref: '#/definitions/web.response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/web.response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/web.response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/web.response'
+      summary: Delete product
+      tags:
+      - Products
+    get:
+      consumes:
+      - application/json
+      description: get Product by id
+      parameters:
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      - description: Product ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/web.response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/web.response'
+      summary: Get Product
+      tags:
+      - Products
+    patch:
+      consumes:
+      - application/json
+      description: update selected fields of a product
+      parameters:
+      - description: Product to update
+        in: body
+        name: product
+        required: true
+        schema:
+          $ref: '#/definitions/domain.Product'
+      - description: Product ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/web.response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/web.errorResponse'
+      summary: Update product
+      tags:
+      - Products
+    put:
+      consumes:
+      - application/json
+      description: update existing product
+      parameters:
+      - description: Product to update
+        in: body
+        name: product
+        required: true
+        schema:
+          $ref: '#/definitions/domain.Product'
+      - description: Product ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/web.response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/web.response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/web.response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/web.errorResponse'
+      summary: Update product
+      tags:
+      - Products
+swagger: "2.0"
