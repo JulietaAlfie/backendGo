@@ -35,9 +35,8 @@ func (s *sqlStorePatient) ReadAll() ([]domain.Patient, error) {
 	return list, nil
 }
 
-// Read devuelve un patient por su id
 func (s *sqlStorePatient) Read(id int) (domain.Patient, error) {
-	var patient domain.Patient // 0x3445
+	var patient domain.Patient 
 	row := s.db.QueryRow("select * from patients where id = ?", id)
 	err := row.Scan(&patient.Id, &patient.Name, &patient.Lastname, &patient.Residence, &patient.DNI, &patient.DischargeDate)
 	if err != nil {
@@ -46,9 +45,8 @@ func (s *sqlStorePatient) Read(id int) (domain.Patient, error) {
 	return patient, nil
 }
 
-// ReadByDNI devuelve un patient por su id
 func (s *sqlStorePatient) ReadByDNI(dni int) (domain.Patient, error) {
-	var patient domain.Patient // 0x3445
+	var patient domain.Patient 
 	row := s.db.QueryRow("select * from patients where dni = ?", dni)
 	err := row.Scan(&patient.Id, &patient.Name, &patient.Lastname, &patient.Residence, &patient.DNI, &patient.DischargeDate)
 	if err != nil {
@@ -57,7 +55,6 @@ func (s *sqlStorePatient) ReadByDNI(dni int) (domain.Patient, error) {
 	return patient, nil
 }
 
-// Create agrega un nuevo patient
 func (s *sqlStorePatient) Create(patient domain.Patient) (int, error) {
 	query := "insert into patients (name, lastname, residence, dni, discharge_date) values (?, ?, ?, ?, ?)"
 	st, err := s.db.Prepare(query)
@@ -81,7 +78,6 @@ func (s *sqlStorePatient) Create(patient domain.Patient) (int, error) {
 	return int(id), nil
 }
 
-// Update actualiza un patient
 func (s *sqlStorePatient) Update(patient domain.Patient) error {
 	stmt, err := s.db.Prepare("UPDATE patients SET name = ?, lastname = ?, residence = ?, dni = ?, discharge_date = ? WHERE id = ?")
 	if err != nil {
@@ -95,7 +91,6 @@ func (s *sqlStorePatient) Update(patient domain.Patient) error {
 	return nil
 }
 
-// Delete elimina un patient
 func (s *sqlStorePatient) Delete(id int) error {
 	stmt := "delete from patients where id = ?"
 	_, err := s.db.Exec(stmt, id)
@@ -105,7 +100,6 @@ func (s *sqlStorePatient) Delete(id int) error {
 	return nil
 }
 
-// Exists verifica si un patient existe
 func (s *sqlStorePatient) Exists(dni int) bool {
 	var id int
 	row := s.db.QueryRow("select id from patients where dni = ?", dni)

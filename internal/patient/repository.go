@@ -10,7 +10,6 @@ import (
 type Repository interface {
 	GetAll() []domain.Patient
 	GetByID(id int) (domain.Patient, error)
-	GetByDNI(dni int) (domain.Patient, error)
 	Create(od domain.Patient) (domain.Patient, error)
 	Update(id int, od domain.Patient) (domain.Patient, error)
 	Delete(id int) error
@@ -36,15 +35,6 @@ func (r *repository) GetAll() []domain.Patient {
 
 func (r *repository) GetByID(id int) (domain.Patient, error) {
 	patient, err := r.storage.Read(id)
-	if err != nil {
-		return domain.Patient{}, errors.New("patient not found")
-	}
-	return patient, nil
-
-}
-
-func (r *repository) GetByDNI(dni int) (domain.Patient, error) {
-	patient, err := r.storage.ReadByDNI(dni)
 	if err != nil {
 		return domain.Patient{}, errors.New("patient not found")
 	}

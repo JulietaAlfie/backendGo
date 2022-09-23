@@ -16,14 +16,12 @@ type response struct {
 	Data interface{} `json:"data"`
 }
 
-// Success escribe una respuesta exitosa
 func Success(ctx *gin.Context, status int, data interface{}) {
 	ctx.JSON(status, response{
 		Data: data,
 	})
 }
 
-// Failure escribe una respuesta fallida
 func Failure(ctx *gin.Context, status int, err error) {
 	ctx.JSON(status, errorResponse{
 		Message: err.Error(),

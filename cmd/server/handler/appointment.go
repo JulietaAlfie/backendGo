@@ -299,7 +299,24 @@ func (h *appointmentHandler) GetByDni() gin.HandlerFunc {
 		web.Success(c, 200, appointment)
 	}
 }
-
+// ListAppointments godoc
+// @Summary List appointments
+// @Tags Appointments
+// @Description get appointments
+// @Produce  json
+// @Success 200 {object} web.response
+// @Failure 422 {object} web.errorResponse
+// @Router /appointments [get]
+func (h *appointmentHandler) GetAll() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		appointments, err := h.s.GetAll()
+		if err != nil {
+			web.Failure(c, 422, errors.New("appointments could not be brought"))
+			return
+		}
+		web.Success(c, 200, appointments)
+	}
+}
 func validateEmptysAppointment(appointment *domain.Appointment) (bool, error) {
 	switch {
 	case appointment.Patient == domain.Patient{}:

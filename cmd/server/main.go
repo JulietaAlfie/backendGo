@@ -82,6 +82,7 @@ func main() {
 
 	appointments := r.Group("/appointments")
 	{
+		appointments.GET("", appointmentHandler.GetAll())
 		appointments.GET(":id", appointmentHandler.GetByID())
 		appointments.GET("/dni/:dni", appointmentHandler.GetByDni())
 		appointments.POST("", middleware.Authentication(), appointmentHandler.Post())
